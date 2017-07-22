@@ -17,7 +17,7 @@ log.setLevel(logging.INFO)
 handler = logging.FileHandler(filename='miki.log', encoding='utf-8', mode='w')
 log.addHandler(handler)
 
-initial_extensions = []
+initial_extensions = ['modules.account']
 
 bot = commands.Bot(command_prefix=">>")
 

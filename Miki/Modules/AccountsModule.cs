@@ -81,11 +81,6 @@ namespace Miki.Modules
                 {
                     embed.Description = $"For now, **{limit} slots** is the max. sorry :(";
 
-                    if (limit == 15)
-                    {
-                        embed.AddField("Pro tip!", "Donators get 5 more slots!");
-                    }
-
                     embed.Color = new IA.SDK.Color(1f, 0.6f, 0.4f);
                     await e.Channel.SendMessage(embed);
                     return;

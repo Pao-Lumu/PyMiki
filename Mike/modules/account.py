@@ -12,9 +12,25 @@ class Account:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name="buymarriageslot")
-    async def buymarriageslot(self, ctx):
+    @commands.group(pass_context=True)
+    async def buymarriageslot(self,ctx):
+        # TODO 
+        # Add ability to check SQL db for a given ID
         limit = 10
+        e = discord.Embed()
+        print(type(ctx.message.channel))
+        if 19 >= limit:
+            e.description = "Each user can have a maximum of **{limit} marriage slots**. You have reached this cap."
+            e.color = discord.Color(0xFF9966)
+            await self.bot.say(embed=e)
+        else:
+            e.description="NANI???"
+            # embed.color = discord.Color((255, 153, 102))
+            await self.bot.say(embed=e)
+
+    @buymarriageslot.command(name='yes')
+    async def _yes_bms(self):
+        await self.bot.say("sure")
 
     @commands.command(name='leaderboards', aliases=['leaderboard', 'lb'])
     async def leaderboards(self, ctx):
@@ -71,3 +87,8 @@ class Account:
     @commands.command(name='moneys')
     async def moneys(self, ctx):
         return
+
+def setup(bot):
+    print(type(bot))
+    bot.add_cog(Account(bot))
+
