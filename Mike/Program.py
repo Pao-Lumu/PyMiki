@@ -1,14 +1,11 @@
-import discord
-from discord.ext import commands
-import sys
-import asyncio
-import json
-import os
-import traceback
 import datetime
+import json
 import logging
-import time
+import os
+import sys
+import traceback
 
+from discord.ext import commands
 
 discord_logger = logging.getLogger('discord')
 discord_logger.setLevel(logging.CRITICAL)
@@ -17,7 +14,11 @@ log.setLevel(logging.INFO)
 handler = logging.FileHandler(filename='miki.log', encoding='utf-8', mode='w')
 log.addHandler(handler)
 
-initial_extensions = ['modules.account']
+initial_extensions = [
+    'modules.account',
+    'modules.pasta',
+    'modules.admin'
+]
 
 bot = commands.Bot(command_prefix=">>")
 
@@ -59,9 +60,9 @@ async def on_message(message):
 
 def load_credentials():
     if os.path.isfile("credentials.json"):
-
         with open('credentials.json') as f:
             return json.load(f)
+
 
 if __name__ == '__main__':
     credentials = load_credentials()

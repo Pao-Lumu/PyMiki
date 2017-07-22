@@ -1,19 +1,16 @@
-from discord.ext import commands
-import asyncio
-import traceback
 import discord
-import inspect
-import textwrap
-import io
+from discord.ext import commands
+
 
 class Account:
-    """"""
+    """Marriage and profiles and mekos, Oh my!"""
 
     def __init__(self, bot):
         self.bot = bot
 
     @commands.group(pass_context=True, aliases=['bms', 'buyslot'])
     async def buymarriageslot(self, ctx):
+        """WIP"""
         # TODO 
         # Add ability to check SQL db for a given ID
         limit = 10
@@ -30,66 +27,81 @@ class Account:
 
     @buymarriageslot.command(name='yes')
     async def _yes_bms(self):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(name='leaderboards', aliases=['leaderboard', 'lb'])
     async def leaderboards(self):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='divorce', aliases=['div'])
     async def divorce(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='profile')
     async def profile(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='marry')
     async def marry(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='declinemarriage')
     async def declinemarriage(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='acceptmarriage')
     async def acceptmarriage(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='showproposals')
     async def showproposals(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='rep')
     async def rep(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='give')
     async def give(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='syncavatar')
     async def syncavatar(self, ctx):
+        """WIP"""
         # low priority
-        await self.bot.say("NYI")
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='syncname')
     async def syncname(self, ctx):
+        """WIP"""
         # low priority
-        await self.bot.say("NYI")
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='setrolelevel')
     async def setrolelevel(self, ctx):
+        """WIP"""
         # low priority
-        await self.bot.say("NYI")
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='daily')
     async def daily(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
     @commands.command(pass_context=True,name='moneys')
     async def moneys(self, ctx):
-        await self.bot.say("NYI")
+        """WIP"""
+        await self.bot.say("WIP")
 
 def setup(bot):
     bot.add_cog(Account(bot))

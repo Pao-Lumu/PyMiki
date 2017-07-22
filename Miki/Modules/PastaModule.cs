@@ -135,7 +135,7 @@ namespace Miki.Modules
 
                     if (pasta != null)
                     {
-                        await e.Channel.SendMessage(Utils.ErrorEmbed(locale, "This pasta already exist! try a different tag!"));
+                        await e.Channel.SendMessage(Utils.ErrorEmbed(locale, "This pasta already exists! Try a different tag!"));
                         return;
                     }
 
