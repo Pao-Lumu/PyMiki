@@ -2,7 +2,7 @@
 A rewrite+ of [Miki](https://github.com/velddev/Miki) by [Velddev](https://github.com/velddev) in Python.
 
 THIS BOT IS STILL A WORK IN PROGRESS.
-OVER HALF OF ITS FEATURES ARE NOT IMPLEMENTED, AND THUS WILL NOT WORK.
+MORE THAN THREE-QUARTERS OF ITS FEATURES ARE IMPLEMENTED, AND THUS WILL NOT WORK.
 
 This bot is intended for personal use (i.e. single server usage), but if you want to host it, go ahead.
 
