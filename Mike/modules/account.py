@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+import utilities
+
 
 class Account:
     """Marriage and profiles and mekos, Oh my!"""
@@ -21,88 +23,103 @@ class Account:
                 e.color = discord.Color(0xFF9966)
                 await self.bot.say(embed=e)
             else:
-                e.description="Would you like to buy a marriage slot?"
+                e.description = "Would you like to buy a marriage slot?"
                 e.color = discord.Color(0xFF9966)
                 await self.bot.say(embed=e)
 
     @buymarriageslot.command(name='yes')
     async def _yes_bms(self):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
     @commands.command(name='leaderboards', aliases=['leaderboard', 'lb'])
     async def leaderboards(self):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='divorce', aliases=['div'])
+    @commands.command(pass_context=True, name='divorce', aliases=['div'])
     async def divorce(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='profile')
+    @commands.command(pass_context=True, name='profile')
     async def profile(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='marry')
+    @commands.command(pass_context=True, name='marry')
     async def marry(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='declinemarriage')
+    @commands.command(pass_context=True, name='declinemarriage')
     async def declinemarriage(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='acceptmarriage')
+    @commands.command(pass_context=True, name='acceptmarriage')
     async def acceptmarriage(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='showproposals')
+    @commands.command(pass_context=True, name='showproposals')
     async def showproposals(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='rep')
+    @commands.command(pass_context=True, name='rep')
     async def rep(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='give')
+    @commands.command(pass_context=True, name='give')
     async def give(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='syncavatar')
+    @commands.command(pass_context=True, name='syncavatar')
     async def syncavatar(self, ctx):
         """WIP"""
         # low priority
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='syncname')
+    @commands.command(pass_context=True, name='syncname')
     async def syncname(self, ctx):
         """WIP"""
         # low priority
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='setrolelevel')
+    @commands.command(pass_context=True, name='setrolelevel')
     async def setrolelevel(self, ctx):
         """WIP"""
         # low priority
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='daily')
+    @commands.command(pass_context=True, name='daily')
     async def daily(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
 
-    @commands.command(pass_context=True,name='moneys')
+    @commands.command(pass_context=True, name='moneys')
     async def moneys(self, ctx):
         """WIP"""
-        await self.bot.say("WIP")
+        e = await utilities.wip_embed()
+        await self.bot.say(embed=e)
+
 
 def setup(bot):
     bot.add_cog(Account(bot))
-
