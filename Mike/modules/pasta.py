@@ -1,10 +1,10 @@
-import sqlite3
 from datetime import date
 
 import discord
 from discord.ext import commands
 
 import utilities
+from miki_sql import PastaSQL
 
 
 class Pasta:
@@ -12,8 +12,7 @@ class Pasta:
 
     def __init__(self, bot):
         self.bot = bot
-        self.db = sqlite3.connect("pymiki.db")
-        self.cursor = self.db.cursor()
+        self.db = PastaSQL()
         # self.cursor.execute('''CREATE TABLE pasta
         # (pasta_tag text, pasta_text text, creator_id text, creation_date text,
         # uses integer, likes integer, dislikes integer)''')
@@ -26,40 +25,39 @@ class Pasta:
             await self.bot.say(embed=e)
             return
         cmd = ' '.join(cmd)
-        self.cursor.execute('''SELECT pasta_text,uses FROM pasta WHERE pasta_tag=?''', (cmd,))
-        pasta_msg = self.cursor.fetchone()
-        if pasta_msg is None:
+        if self.db.exists(cmd):
+            pasta_msg = self.db.get(cmd)
+            new_uses = int(pasta_msg[1]) + 1
+            print(new_uses)
+            self.db.update_uses(new_uses, cmd)
+            await self.bot.say(pasta_msg[0])
+            return
+        else:
             e = await utilities.error_embed("That pasta doesn't exist!")
             await self.bot.say(embed=e)
             return
-        self.cursor.execute('''UPDATE pasta SET uses=? WHERE pasta_tag=?''', (int(pasta_msg[1]) + 1, cmd[1]))
-        self.db.commit()
-        await self.bot.say(pasta_msg[0])
-        return
 
     @commands.command(pass_context=True, aliases=['cp'])
     async def createpasta(self, ctx, *text):
         """Make your very own pasta!"""
-        e = discord.Embed()
-        print(text)
         if len(text) <= 1:
             e = await utilities.error_embed(
                 "I couldn't find any content for this pasta, please specify what you want to make.")
             await self.bot.say(embed=e)
             return
-        self.cursor.execute('''SELECT * FROM pasta WHERE pasta_tag=?''', (text[0].lower(),))
-        if self.cursor.fetchone() is not None:
+
+        if self.db.exists(text[0].lower()):
             e = await utilities.error_embed("This pasta already exists! Try a different tag.")
             await self.bot.say(embed=e)
             return
         if len(text) >= 2:
+            e = discord.Embed()
             args = (text[0].lower(), " ".join(text[1:]), ctx.message.author.id, date.today(), 0, 0, 0)
-            self.cursor.execute('''INSERT INTO pasta VALUES (?,?,?,?,?,?,?)''', args)
-            self.db.commit()
+            self.db.add(args)
             e.description = "Successfully created new pasta `{}`!".format(text[0])
             await self.bot.say(embed=e)
             return
-        await self.bot.say("If you're reading this, tell the developer.")
+        await self.bot.say("If you're reading this, tell the developer he's an idiot.")
         return
 
     @commands.command(pass_context=True, aliases=['ip'])
@@ -70,19 +68,19 @@ class Pasta:
             e = await utilities.error_embed("**USAGE_REMINDER_HERE**")
             await self.bot.say(embed=e)
             return
-        self.cursor.execute('''SELECT * FROM pasta WHERE pasta_tag=?''', (cmd[1],))
-        pasta_info = self.cursor.fetchone()
-        if self.cursor.fetchone() == (0,):
-            e = await utilities.error_embed("**NOT_FOUND**")
+        if self.db.exists(cmd[1]):
+            pasta_info = self.db.get_info(cmd[1])
+            e = discord.Embed(color=discord.Color.blue())
+            e.set_author(name=pasta_info[0].upper())
+            e.add_field(name="Created by", value="{} [{}]".format("NYI", pasta_info[2]))
+            e.add_field(name="Date created", value=pasta_info[3])
+            e.add_field(name="Times used", value=pasta_info[4])
+            e.add_field(name="Rating", value="⬆️ {} ⬇️ {}".format(pasta_info[5], pasta_info[6]))
             await self.bot.say(embed=e)
             return
-        e = discord.Embed(color=discord.Color.blue())
-        e.set_author(name=pasta_info[0].upper())
-        e.add_field(name="Created by", value="{} [{}]".format("NYI", pasta_info[2]))
-        e.add_field(name="Date created", value=pasta_info[3])
-        e.add_field(name="Times used", value=pasta_info[4])
-        e.add_field(name="Rating", value="⬆️ {} ⬇️ {}".format(pasta_info[5], pasta_info[6]))
+        e = await utilities.error_embed("**NOT_FOUND**")
         await self.bot.say(embed=e)
+        return
 
     @commands.command(pass_context=True, aliases=['lp'])
     async def lovepasta(self, ctx):
@@ -102,19 +100,25 @@ class Pasta:
     async def deletepasta(self, ctx):
         """Remove a pasta. Accidents happen."""
         cmd = ctx.message.content.split(" ", 1)
+        author_id = ctx.message.author.id
+
         if len(cmd) == 1:
             e = await utilities.error_embed("Please state which pasta you would like to remove.")
             await self.bot.say(embed=e)
             return
-        self.cursor.execute('''SELECT * FROM pasta WHERE pasta_tag=? AND creator_id=?''',
-                            (cmd[1], ctx.message.author.id))
-        if self.cursor.fetchone() == (0,):
-            e = await utilities.error_embed("You either don't own this pasta or it doesn't exist.")
+        cmd = cmd[1]
+        if self.db.exists(cmd) is False:
+            e = await utilities.error_embed("This pasta doesn't exist!")
             await self.bot.say(embed=e)
             return
-        self.cursor.execute('''DELETE FROM pasta WHERE pasta_tag=? AND creator_id=?''', (cmd[1], ctx.message.author.id))
-        self.db.commit()
-        e = await utilities.success_embed("Deleted pasta `{}`!".format(cmd[1]))
+
+        if self.db.pasta_owned(cmd, author_id):
+            self.db.delete(cmd)
+            e = await utilities.success_embed("Deleted pasta `{}`!".format(cmd))
+            await self.bot.say(embed=e)
+            return
+
+        e = await utilities.error_embed("You don't own this pasta.")
         await self.bot.say(embed=e)
         return
 
@@ -122,14 +126,13 @@ class Pasta:
     async def poppasta(self, ctx):
         """This command shows the most used pastas"""
         e = discord.Embed()
-        self.cursor.execute(''''SELECT * FROM pasta ORDER BY uses DESC LIMIT 12''')
-        pastas = self.cursor.fetchall()
+        pastas = self.db.popular()
         e.title = "Most popular pastas"
         for item in pastas:
             if item == pastas[0]:
-                e.add_field(name="👑 " + str(item[0]), value=item[4])
+                e.add_field(name="👑 " + str(item[0]), value=item[1])
             else:
-                e.add_field(name=item[0], value=item[4])
+                e.add_field(name=item[0], value=item[1])
         await self.bot.say(embed=e)
 
     @commands.command(pass_context=True, aliases=['tp'])
@@ -140,15 +143,16 @@ class Pasta:
 
     @commands.command(pass_context=True, aliases=['mp'])
     async def mypasta(self, ctx):
-        authorid = ""
         if ctx.message.mentions:
-            authorid = ctx.message.mentions[0].id
+            user_id = ctx.message.mentions[0].id
+            user_name = ctx.message.mentions[0].name + " doesn't"
         else:
-            authorid = ctx.message.author.id
+            user_id = ctx.message.author.id
+            user_name = "You don't"
         """"""
-        self.cursor.execute('''SELECT pasta_tag FROM pasta WHERE creator_id=?''', (authorid,))
-        mp = self.cursor.fetchall()
-        if len(mp) >= 1:
+        mp = self.db.get_owned(user_id)
+        # TODO: PAGIFY THIS!!!
+        if len(mp) > 0:
             ap = []
             for item in mp:
                 ap.append(item[0])
@@ -157,7 +161,7 @@ class Pasta:
             e.description = "`" + "` `".join(ap) + "`"
             await self.bot.say(embed=e)
             return
-        e = await utilities.error_embed("Uh-oh! " + ctx.message.mentions[0].name + " doesn't have any pastas!")
+        e = await utilities.error_embed("Uh-oh! {} have any pastas!".format(user_name))
         await self.bot.say(embed=e)
 
 
