@@ -1,0 +1,11 @@
+(17) statement aborts at 13: [SELECT * FROM pasta
+;] database schema has changed
+(26) file is encrypted or is not a database
+(1) unrecognized token: ":"
+(26) file is encrypted or is not a database
+(1) near "(": syntax error
+(1) near "(": syntax error
+(1) near "(": syntax error
+(1) near "(": syntax error
+(26) file is encrypted or is not a database
+(26) file is encrypted or is not a database

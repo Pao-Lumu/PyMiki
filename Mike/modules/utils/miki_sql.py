@@ -16,7 +16,7 @@ class MikiSQL:
 
 # accounts: (user_id text, user_name text, currency int, daily_reset text, command_uses int, xp int, marriage_slots int, marriages text, achievements text)
 class AccountSQL(MikiSQL):
-    def add_user_if_not_extant(self, user_id):
+    def add(self, user_id):
         self.cursor.execute("SELECT * FROM account WHERE user_id=?", (user_id,))
         if not (self.cursor.fetchone()):
             # ERROR
@@ -24,10 +24,13 @@ class AccountSQL(MikiSQL):
         else:
             self.cursor.execute("INSERT INTO account VALUES(?,?,?,?,?,?,?)")
 
+    def exists(self, user_id):
+        return
+
     def get_user_data(self, user_id, field='*'):
         return
 
-
+# (guild_id int, members int, weekly_date text, )
 class GuildSQL(MikiSQL):
     def get_guild_xp(self):
         return
@@ -55,9 +58,9 @@ class PastaSQL(MikiSQL):
         self.cursor.execute("""SELECT pasta_text,uses FROM pasta WHERE pasta_tag=?""", (pasta_tag,))
         return self.cursor.fetchone()
 
-        # HAH LMAO
-
     def get_owned(self, user_id):
+        # HAH XD D.VA IS THE BEST CHARACTER
+        # die.
         self.cursor.execute("""SELECT pasta_text,uses FROM pasta WHERE creator_id=?""", (user_id,))
         return self.cursor.fetchall()
 
@@ -82,4 +85,13 @@ class PastaSQL(MikiSQL):
         return self.cursor.fetchall()
 
     def top(self):
+        self.cursor.execute('''SELECT pasta_tag,net_vote FROM pasta ORDER BY net_vote DESC LIMIT 12''')
+        return
+
+    def vote_up(self, pasta_tag):
+        self.cursor.execute('''UPDATE pasta SET dislikes=likes+1, net_vote=net_vote+1''')
+        return
+
+    def vote_down(self, pasta_tag):
+        self.cursor.execute('''UPDATE pasta SET dislikes=dislikes+1, net_vote=net_vote-1''')
         return
