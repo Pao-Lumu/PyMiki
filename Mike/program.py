@@ -17,7 +17,8 @@ log.addHandler(handler)
 initial_extensions = [
     'modules.account',
     'modules.pasta',
-    'modules.admin'
+    'modules.admin',
+    'modules.vote'
 ]
 
 bot = commands.Bot(command_prefix=">>")

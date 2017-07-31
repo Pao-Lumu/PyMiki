@@ -28,7 +28,6 @@ class Pasta:
         if self.db.exists(cmd[0]):
             pasta_msg = self.db.get(cmd[0])
             new_uses = int(pasta_msg[1]) + 1
-            print(new_uses)
             self.db.update_uses(new_uses, cmd[0])
             await self.bot.say(pasta_msg[0])
             return
